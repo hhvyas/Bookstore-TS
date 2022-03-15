@@ -1,0 +1,15 @@
+.book-list {
+    width: 70%;
+    display: grid;
+    margin: 5% 5% 0 5%; 
+    place-items: center;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+@media only screen and (max-width: 768px) {
+    .book-list {
+        margin: 5% 8%; 
+        grid-gap: 30px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+} 

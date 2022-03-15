@@ -1,0 +1,15 @@
+.home-filter {
+    margin-top: 5%;
+    width: 20%;
+    display: flex;
+    justify-content: center;
+}
+.home-filter li {
+    margin-bottom: 10px;
+    list-style-type: none;
+    color: black;
+    
+}
+.home-filter input {
+    margin-right: 10px;
+}

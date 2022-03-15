@@ -1,0 +1,57 @@
+.book-item {
+    width: 300px;
+    height: 400px;
+    transition: transform 250ms;
+    padding: 20px;
+    /* border: 1px solid black; */
+}
+
+.book-item:hover {
+    transform: translateY(-10px);
+    background-color: rgba(220, 220, 220, 0.2);
+    cursor: pointer;
+}
+
+.book-item-image {
+    width: 70%;
+    height: 80%;
+    margin-left: 15%;
+    border-radius: 15px;
+}
+
+.book-item-name, .book-item-author, .book-item-genre, .book-item-likes {
+    display: flex;
+    justify-content: center
+}
+
+.book-item-name > p {
+    font-weight: 700;
+}
+
+.book-item-author, .book-item-genre, .book-item-likes {
+    font-size: small;
+    align-items: center;
+    color: var(--ternary-color);
+}
+
+.book-item-name > text {
+    font-size: 1.2rem;
+}
+.book-item-link {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+@media only screen and (max-width: 768px) {
+    .book-item {
+       width: 150px;
+       height: 200px;
+    }
+    .book-item-author, .book-item-genre, .book-item-likes {
+        font-size: xx-small;
+        align-items: center;
+    }
+    .book-item-name > text {
+        font-size: 0.8rem;
+    }
+} 

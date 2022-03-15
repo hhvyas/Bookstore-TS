@@ -1,0 +1,52 @@
+.book-form {
+  width: 40%;
+  margin-left: 30%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.book-form-label {
+  margin-bottom: 15px;
+}
+.book-form-label > label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: dimgrey;
+}
+.book-form-input {
+  height: 40px;
+}
+.book-form-input > input {
+  width: 100%;
+  height: 100%;
+  padding-left: 5px;
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 5px;
+}
+.book-form button {
+  width: 50%;
+  margin: 0;
+  height: 40px;
+  background: #107eff;
+  color: white;
+  border-radius: 25px;
+  border: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.bookName span {
+  color: #107eff;
+}
+
+.book-form-main {
+  /* border: 3px solid #107eff; */
+  padding: 35px;
+  border-radius: 10px;
+}
+.heading{
+  display: flex;
+  justify-content: center;
+  margin: 50px 0;
+}

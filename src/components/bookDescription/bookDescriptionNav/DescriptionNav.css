@@ -1,0 +1,19 @@
+.book-description-nav {
+    width: 100%;
+}
+.nav ul {
+    display: flex;
+    /* border-bottom: 1px solid black; */
+}
+.nav > ul > li {
+    text-decoration: none;
+    list-style-type: none;
+    margin-right: 15px;
+    /* border-bottom: 1px solid black; */
+    cursor: pointer;
+    padding-bottom: 5px;
+}
+.active-tab {
+    border-bottom: 2px solid rgba(220, 220, 220, 1);
+}
+
