@@ -1,7 +1,6 @@
 import React from "react";
-import { BookItemContextProvider } from "../../contexts/bookCollectionContext";
 import { bookItemInitialValue } from "../../contexts/initialValues";
-import { BookCollectionContextInterface } from "../../types/BookCollectionContextInterface";
+import {  BookItemContextInterface } from "../../types/BookCollectionContextInterface";
 import "./AddBook.css";
 import { useBookCollectionUseContext } from "../../contexts/bookCollectionContext";
 import { Link } from "react-router-dom";
@@ -96,6 +95,7 @@ const formTags: {
   },
 ];
 
+const forbiddenValues = bookInitialValue
 
 function AddBook() {
   const [book, setBook] = React.useState(bookInitialValue);
@@ -111,23 +111,52 @@ function AddBook() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
+    let flag = false;
+    formTags.forEach(item => {
+      if (item.input_name === 'bookID'){
+        return;
+      }
+      let x = book[item.input_name];
+      let y = forbiddenValues[item.input_name];
+      if (x === y && !flag){
+        console.log(`${item.input_name} should not be ${y === '' ? 'empty' : y}`)
+        flag = true;
+      }
+    })
+    if (flag){
+      return;
+    }
+    // key should be instance of BookProperties
+    // key should be instance of forbiddenValue
 
-    
+    //   if (key === 'bookID') continue;
+    //   let x:BookProperties;
+    //   if (book[key] === forbiddenValues[key]){
+    //     alert('key cannot have this value');
+    //     return;
+    //   }
+    // }
 
 
-
+    let derivedBook_ID = ''
     let newBook = book;
-    let derivedBook_ID = String(
-      +BooksCollection.BooksInfo[BooksCollection.BooksInfo.length - 1].bookID +
-        Math.random()
-    );
+    if (localStorage.getItem('BookCollection')){
+      const arrayOfBooks: BookItemContextInterface[] = JSON.parse(localStorage.getItem('BookCollection') ?? '');
+      let x = arrayOfBooks[0].bookID;
+      console.log(x);
+      derivedBook_ID = String(Number(x) + 1);
+    }else{
+      derivedBook_ID = String(
+        Number(BooksCollection.BooksInfo[BooksCollection.BooksInfo.length - 1].bookID) + 1
+      );
+    }
     newBook.bookID = derivedBook_ID;
     if (localStorage.getItem("BookCollection")) {
       console.log("It matched");
       let bookFromLocalStorage = JSON.parse(
         localStorage.getItem("BookCollection") ?? ""
       );
-      bookFromLocalStorage.push(newBook);
+      bookFromLocalStorage.unshift(newBook);
       localStorage.removeItem("BookCollection");
       localStorage.setItem(
         "BookCollection",
@@ -135,8 +164,18 @@ function AddBook() {
       );
     } else {
       let newBooks = [];
-      newBooks.push(newBook);
+      newBooks.unshift(newBook);
       localStorage.setItem("BookCollection", JSON.stringify(newBooks));
+    }
+
+    if (localStorage.getItem('BookCollection')){
+      const arrayOfBooks: BookItemContextInterface[] = JSON.parse(localStorage.getItem('BookCollection') ?? '');
+      let x = arrayOfBooks[0].bookID;
+      if (x === derivedBook_ID){
+        alert('Book Successfully Added!');
+      }else{
+        alert('There was some error!')
+      }
     }
     setBook(bookInitialValue);
   };
