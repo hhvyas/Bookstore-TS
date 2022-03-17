@@ -11,6 +11,7 @@ type PropBookList = {
 function BookList(props: PropBookList) {
   const { booksToBeRendered } = props;
   return (
+    <>
     <div className="book-list">
       {booksToBeRendered.map((bookDisplayInfo) => (
         <BookItem
@@ -19,6 +20,7 @@ function BookList(props: PropBookList) {
         />
       ))}
     </div>
+    </>
   );
 }
 

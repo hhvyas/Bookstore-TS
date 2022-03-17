@@ -1,5 +1,4 @@
 import { useSearchParams } from "react-router-dom";
-import React from "react";
 import {
   BookCollectionContextInterface,
 
@@ -13,7 +12,7 @@ export function useArrayOfBooksInfo() {
   const receivedQueryFromAddress: string[] =
     searchParams.get("genre")?.split(",") ?? [];
 
-  const booksFromLocalStorage = localStorage.getItem("BookCollection");
+  const booksFromLocalStorage = localStorage.getItem("bookCollection");
 
   const combinedBooks = [...storedBooks, ...JSON.parse(booksFromLocalStorage ?? "[]")]
 

@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { bookItemInitialValue } from "../../contexts/initialValues";
-import { BookItemContextInterface } from "../../types/BookCollectionContextInterface";
+import { BookCollectionContextInterface, BookItemContextInterface } from "../../types/BookCollectionContextInterface";
 import "./AddBook.css";
 import { useBookCollectionUseContext } from "../../contexts/bookCollectionContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 
 const bookInitialValue = {
@@ -97,11 +97,41 @@ const formTags: {
 
 const forbiddenValues = bookInitialValue;
 
+const getBookID = (bookCollection: BookCollectionContextInterface) => {
+  const derivedBook_ID = localStorage.getItem("bookCollection")
+    ? String(
+        JSON.parse(localStorage.getItem("bookCollection") ?? "")[0].bookID + 1
+      )
+    : String(
+        Number(
+          bookCollection.BooksInfo[bookCollection.BooksInfo.length - 1].bookID
+        ) + 1
+      );
+  return derivedBook_ID;
+};
+
+const checkIfBookAdded = (navigate: any, newBookID: string) => {
+  const updatedLocalStorage = localStorage.getItem("bookCollection");
+    if (updatedLocalStorage) {
+      const arrayOfBooks: BookItemContextInterface[] = JSON.parse(
+        updatedLocalStorage ?? ""
+      );
+      if (arrayOfBooks[0].bookID === newBookID) {
+        alert("Book Successfully Added!");
+        navigate("/");
+      } else {
+        alert("There was some error!");
+      }
+    }
+}
+
 function AddBook() {
   const [book, setBook] = React.useState(bookInitialValue);
-  const BooksCollection = useBookCollectionUseContext();
+  const navigate = useNavigate();
   const inputRefs = React.useRef<any>([]);
   const [error, setError] = useState("");
+  const bookCollection = useBookCollectionUseContext();
+  const localStorageBookItems = localStorage.getItem('bookCollection')
   const handleChange = (event: any): void => {
     setBook((prevBook) => {
       return {
@@ -118,28 +148,30 @@ function AddBook() {
       if (item.input_name === "bookID") {
         return;
       }
-      let x = book[item.input_name];
-      let y = forbiddenValues[item.input_name];
+      const currentBook = book[item.input_name];
+      const currentBook_forbiddenValue = forbiddenValues[item.input_name];
 
-      if (x === y && !flag) {
-        setError(`${item.text} should not be ${y === "" ? "empty" : y}`);
+      if (currentBook === currentBook_forbiddenValue && !flag) {
+        setError(
+          `${item.text} should not be ${
+            currentBook_forbiddenValue === ""
+              ? "empty"
+              : currentBook_forbiddenValue
+          }`
+        );
         console.log(formTags, item.input_name);
-        const x = {
+        const searchBook = {
           input_name: `${item.input_name}`,
           text: `${item.text}`,
           type: `${item.type}`,
         };
         let indexOfErrorElement = 0;
-        console.log("x.input_name", x.input_name);
         for (let i = 0; i < formTags.length; i++) {
-          if (x.input_name === formTags[i].input_name) {
-            console.log(inputRefs);
+          if (searchBook.input_name === formTags[i].input_name) {
             indexOfErrorElement = i;
             break;
           }
         }
-
-        console.log(indexOfErrorElement);
         inputRefs.current[indexOfErrorElement].focus();
         flag = true;
       }
@@ -149,49 +181,31 @@ function AddBook() {
       return;
     }
     setError("");
-    let derivedBook_ID = "";
-    let newBook = book;
-    if (localStorage.getItem("BookCollection")) {
-      const arrayOfBooks: BookItemContextInterface[] = JSON.parse(
-        localStorage.getItem("BookCollection") ?? ""
-      );
-      let x = arrayOfBooks[0].bookID;
-      derivedBook_ID = String(Number(x) + 1);
-    } else {
-      derivedBook_ID = String(
-        Number(
-          BooksCollection.BooksInfo[BooksCollection.BooksInfo.length - 1].bookID
-        ) + 1
-      );
-    }
-    newBook.bookID = derivedBook_ID;
-    if (localStorage.getItem("BookCollection")) {
+    const newBook = book;
+
+    const newBookID = getBookID(bookCollection);
+
+    newBook.bookID = newBookID;
+
+    if (localStorageBookItems) {
       let bookFromLocalStorage = JSON.parse(
-        localStorage.getItem("BookCollection") ?? ""
+        localStorageBookItems ?? ""
       );
       bookFromLocalStorage.unshift(newBook);
-      localStorage.removeItem("BookCollection");
+      localStorage.removeItem("bookCollection");
       localStorage.setItem(
-        "BookCollection",
+        "bookCollection",
         JSON.stringify(bookFromLocalStorage)
       );
     } else {
       let newBooks = [];
       newBooks.unshift(newBook);
-      localStorage.setItem("BookCollection", JSON.stringify(newBooks));
+      localStorage.setItem("bookCollection", JSON.stringify(newBooks));
     }
 
-    if (localStorage.getItem("BookCollection")) {
-      const arrayOfBooks: BookItemContextInterface[] = JSON.parse(
-        localStorage.getItem("BookCollection") ?? ""
-      );
-      let x = arrayOfBooks[0].bookID;
-      if (x === derivedBook_ID) {
-        alert("Book Successfully Added!");
-      } else {
-        alert("There was some error!");
-      }
-    }
+    
+    checkIfBookAdded(navigate, newBookID);
+    
     setBook(bookInitialValue);
   };
 
