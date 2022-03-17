@@ -4,8 +4,8 @@ import { useBookCollectionUseContext } from "../../contexts/bookCollectionContex
 export default function useFilter(){
     const bookCollection = useBookCollectionUseContext();
     let bookCollectionFromLocalStorage = useMemo(() => [], []);
-    if (localStorage.getItem('BookCollection')){
-      bookCollectionFromLocalStorage  = JSON.parse(localStorage.getItem('BookCollection') ?? '');
+    if (localStorage.getItem('bookCollection')){
+      bookCollectionFromLocalStorage  = JSON.parse(localStorage.getItem('bookCollection') ?? '');
     }else{
       bookCollectionFromLocalStorage = [];
     }

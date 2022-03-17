@@ -1,3 +1,3 @@
-import bookCollections from './Data/BooksData.json';
+import bookCollections from './data/booksData.json';
 
-localStorage.setItem('BookCollection', JSON.stringify(bookCollections));
+localStorage.setItem('bookCollection', JSON.stringify(bookCollections));

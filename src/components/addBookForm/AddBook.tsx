@@ -5,7 +5,7 @@ import "./AddBook.css";
 import { useBookCollectionUseContext } from "../../contexts/bookCollectionContext";
 import { Link, useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
-
+// import bookCollectionData from '../../data/booksData.json';
 const bookInitialValue = {
   bookID: "",
   bookName: "",
@@ -236,7 +236,6 @@ function AddBook() {
                     name={formInputElement.input_name}
                     value={book[formInputElement.input_name]}
                     onChange={handleChange}
-                    // ref={inputRefs}
                     ref={(el) => (inputRefs.current[index] = el)}
                   />
                 </div>

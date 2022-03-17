@@ -8,12 +8,10 @@ export default function useBookChange(): BookItemContextInterface {
   let { currentBookID } = useParams();
   const [bookToBeDisplayed, SetBookToBeDisplayed] =
     useState(bookItemInitialValue);
-    let bookCollections: BookCollectionContextInterface
-
-    bookCollections = useBookCollectionUseContext();
+    const bookCollections: BookCollectionContextInterface = useBookCollectionUseContext();
     const newBookColleciton = useMemo(() => [...bookCollections.BooksInfo], [bookCollections]);
-    if (localStorage.getItem('BookCollection')){
-      newBookColleciton.push(...JSON.parse(localStorage.getItem('BookCollection') ?? ''))
+    if (localStorage.getItem('bookCollection')){
+      newBookColleciton.push(...JSON.parse(localStorage.getItem('bookCollection') ?? ''))
     }
 
   currentBookID = currentBookID && currentBookID.split("-")[0];
