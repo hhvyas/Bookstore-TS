@@ -4,8 +4,8 @@ import Filter from "../../components/filter/Filter";
 import Footer from "../../components/pagination/Footer";
 import BookList from "../../components/bookList/BookList";
 import usePagination from "./usePagination";
-import useWhichBooksToBeRendered from "./useWhichBooksToBeRendered";
-import useArrayOfBooksInfo from "./useArrayOfBooksInfo";
+import { useWhichBooksToBeRendered } from "./useWhichBooksToBeRendered";
+import { useArrayOfBooksInfo } from "./useArrayOfBooksInfo";
 import "./Home.css";
 
 const numberOfEntries: number = 8;
@@ -13,7 +13,7 @@ function Home(): JSX.Element {
   const [currentActivePage, setCurrentActivePage] = useState(1);
 
   const { arrayOfBooksInfo } = useArrayOfBooksInfo();
-  console.log(arrayOfBooksInfo);
+  // console.log(arrayOfBooksInfo);
   const paginationCount = usePagination({ arrayOfBooksInfo, numberOfEntries });
 
   const booksToBeRendered: BookItemContextInterface[] =

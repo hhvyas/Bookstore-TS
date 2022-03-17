@@ -1,39 +1,25 @@
 import { useSearchParams } from "react-router-dom";
+import React from "react";
 import {
   BookCollectionContextInterface,
-  BookItemContextInterface,
+
 } from "../../types/BookCollectionContextInterface";
 import { useBookCollectionUseContext } from "../../contexts/bookCollectionContext";
-export default function useArrayOfBooksInfo() {
-  let [searchParams] = useSearchParams();
+export function useArrayOfBooksInfo() {
+  const [searchParams] = useSearchParams();
 
-  let bookCollections: BookCollectionContextInterface
-
-    bookCollections = useBookCollectionUseContext();
+  const { BooksInfo: storedBooks }: BookCollectionContextInterface =
+    useBookCollectionUseContext();
   const receivedQueryFromAddress: string[] =
     searchParams.get("genre")?.split(",") ?? [];
 
-  let arrayOfBooksInfo: BookItemContextInterface[] = bookCollections.BooksInfo;
+  const booksFromLocalStorage = localStorage.getItem("BookCollection");
 
-  
-  console.log('arrayOfBooksInfo', arrayOfBooksInfo);
-    if (localStorage.getItem('BookCollection')){
-      arrayOfBooksInfo = [...arrayOfBooksInfo, ...JSON.parse(localStorage.getItem('BookCollection') ?? '')];
-    }
-    if (receivedQueryFromAddress) {
-      arrayOfBooksInfo = arrayOfBooksInfo.filter((bookItem) =>
-      receivedQueryFromAddress.includes(bookItem.genre)
-      );
-    }
-    console.log('arrayOfBooksInfo', arrayOfBooksInfo)
-    if (!arrayOfBooksInfo.length) {
-      if (localStorage.getItem('BookCollection')){
-        arrayOfBooksInfo = bookCollections.BooksInfo;
-        arrayOfBooksInfo = [...arrayOfBooksInfo, ...JSON.parse(localStorage.getItem('BookCollection') ?? '')];
-      }
-      else
-        arrayOfBooksInfo = bookCollections.BooksInfo
-    }
+  const combinedBooks = [...storedBooks, ...JSON.parse(booksFromLocalStorage ?? "[]")]
 
-  return { arrayOfBooksInfo }
+  const arrayOfBooksInfo = receivedQueryFromAddress.length
+    ? combinedBooks.filter((bookItem) => receivedQueryFromAddress.includes(bookItem.genre))
+    : combinedBooks;
+
+  return { arrayOfBooksInfo };
 }

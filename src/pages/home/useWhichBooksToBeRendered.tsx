@@ -7,7 +7,7 @@ interface PropUseWhichBooksToBeRendered {
   numberOfEntries: number;
 }
 
-export default function useWhichBooksToBeRendered(
+export function useWhichBooksToBeRendered(
   props: PropUseWhichBooksToBeRendered
 ): BookItemContextInterface[] {
   const { arrayOfBooksInfo, currentActivePage, numberOfEntries } = props;

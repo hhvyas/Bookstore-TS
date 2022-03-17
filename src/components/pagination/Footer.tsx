@@ -23,10 +23,8 @@ function Footer(props: FooterPagination): JSX.Element {
               id={`${currentActivePage === page ? "activePaginationPage" : ""}`}
               key={page}
               onClick={() => {
-                console.log('Hiii');
                 handlePageChange(page)
-                console.log('Hiii');}
-              }
+              }}
             >
               {page}
             </button>

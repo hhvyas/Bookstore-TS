@@ -25,7 +25,7 @@
   border: none;
   border-radius: 5px;
 }
-.book-form button {
+.book-form-main button {
   width: 50%;
   margin: 0;
   height: 40px;
@@ -35,6 +35,7 @@
   border: none;
   font-weight: 700;
   font-size: 1.1rem;
+  cursor:pointer;
 }
 .bookName span {
   color: #107eff;
@@ -49,4 +50,7 @@
   display: flex;
   justify-content: center;
   margin: 50px 0;
+}
+.error-msg {
+  color: red;
 }

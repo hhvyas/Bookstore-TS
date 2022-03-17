@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { bookItemInitialValue } from "../../contexts/initialValues";
-import {  BookItemContextInterface } from "../../types/BookCollectionContextInterface";
+import { BookItemContextInterface } from "../../types/BookCollectionContextInterface";
 import "./AddBook.css";
 import { useBookCollectionUseContext } from "../../contexts/bookCollectionContext";
 import { Link } from "react-router-dom";
@@ -95,11 +95,13 @@ const formTags: {
   },
 ];
 
-const forbiddenValues = bookInitialValue
+const forbiddenValues = bookInitialValue;
 
 function AddBook() {
   const [book, setBook] = React.useState(bookInitialValue);
   const BooksCollection = useBookCollectionUseContext();
+  const inputRefs = React.useRef<any>([]);
+  const [error, setError] = useState("");
   const handleChange = (event: any): void => {
     setBook((prevBook) => {
       return {
@@ -109,50 +111,61 @@ function AddBook() {
     });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = (event: any): void => {
     event.preventDefault();
     let flag = false;
-    formTags.forEach(item => {
-      if (item.input_name === 'bookID'){
+    formTags.forEach((item) => {
+      if (item.input_name === "bookID") {
         return;
       }
       let x = book[item.input_name];
       let y = forbiddenValues[item.input_name];
-      if (x === y && !flag){
-        console.log(`${item.input_name} should not be ${y === '' ? 'empty' : y}`)
+
+      if (x === y && !flag) {
+        setError(`${item.text} should not be ${y === "" ? "empty" : y}`);
+        console.log(formTags, item.input_name);
+        const x = {
+          input_name: `${item.input_name}`,
+          text: `${item.text}`,
+          type: `${item.type}`,
+        };
+        let indexOfErrorElement = 0;
+        console.log("x.input_name", x.input_name);
+        for (let i = 0; i < formTags.length; i++) {
+          if (x.input_name === formTags[i].input_name) {
+            console.log(inputRefs);
+            indexOfErrorElement = i;
+            break;
+          }
+        }
+
+        console.log(indexOfErrorElement);
+        inputRefs.current[indexOfErrorElement].focus();
         flag = true;
       }
-    })
-    if (flag){
+    });
+    if (flag) {
+      flag = false;
       return;
     }
-    // key should be instance of BookProperties
-    // key should be instance of forbiddenValue
-
-    //   if (key === 'bookID') continue;
-    //   let x:BookProperties;
-    //   if (book[key] === forbiddenValues[key]){
-    //     alert('key cannot have this value');
-    //     return;
-    //   }
-    // }
-
-
-    let derivedBook_ID = ''
+    setError("");
+    let derivedBook_ID = "";
     let newBook = book;
-    if (localStorage.getItem('BookCollection')){
-      const arrayOfBooks: BookItemContextInterface[] = JSON.parse(localStorage.getItem('BookCollection') ?? '');
+    if (localStorage.getItem("BookCollection")) {
+      const arrayOfBooks: BookItemContextInterface[] = JSON.parse(
+        localStorage.getItem("BookCollection") ?? ""
+      );
       let x = arrayOfBooks[0].bookID;
-      console.log(x);
       derivedBook_ID = String(Number(x) + 1);
-    }else{
+    } else {
       derivedBook_ID = String(
-        Number(BooksCollection.BooksInfo[BooksCollection.BooksInfo.length - 1].bookID) + 1
+        Number(
+          BooksCollection.BooksInfo[BooksCollection.BooksInfo.length - 1].bookID
+        ) + 1
       );
     }
     newBook.bookID = derivedBook_ID;
     if (localStorage.getItem("BookCollection")) {
-      console.log("It matched");
       let bookFromLocalStorage = JSON.parse(
         localStorage.getItem("BookCollection") ?? ""
       );
@@ -168,13 +181,15 @@ function AddBook() {
       localStorage.setItem("BookCollection", JSON.stringify(newBooks));
     }
 
-    if (localStorage.getItem('BookCollection')){
-      const arrayOfBooks: BookItemContextInterface[] = JSON.parse(localStorage.getItem('BookCollection') ?? '');
+    if (localStorage.getItem("BookCollection")) {
+      const arrayOfBooks: BookItemContextInterface[] = JSON.parse(
+        localStorage.getItem("BookCollection") ?? ""
+      );
       let x = arrayOfBooks[0].bookID;
-      if (x === derivedBook_ID){
-        alert('Book Successfully Added!');
-      }else{
-        alert('There was some error!')
+      if (x === derivedBook_ID) {
+        alert("Book Successfully Added!");
+      } else {
+        alert("There was some error!");
       }
     }
     setBook(bookInitialValue);
@@ -185,34 +200,38 @@ function AddBook() {
       <Link to="/" className="back-button-link">
         <IoIosArrowBack className="back-button-icon" />
       </Link>
-      <form className='book-form-main' onSubmit={handleSubmit}>
-      <h3 className="heading">Add Book to Sell</h3>
+      <form className="book-form-main" onSubmit={handleSubmit}>
+        <h3 className="heading">Add Book to Sell</h3>
         <div className="book-form">
-        <>
-          {formTags.map((formInputElement) => (
-            <div
-              className="book-form-container"
-              key={JSON.stringify(formInputElement)}
-            >
-              <div className="book-form-label">
-                <label htmlFor="book_name">
-                  {formInputElement.text}
-                  <span>*</span>
-                </label>
+          <>
+            {formTags.map((formInputElement, index) => (
+              <div
+                className="book-form-container"
+                key={JSON.stringify(formInputElement.input_name)}
+              >
+                <div className="book-form-label">
+                  <label htmlFor="book_name">
+                    {formInputElement.text}
+                    <span>*</span>
+                  </label>
+                </div>
+                <div className="book-form-input">
+                  <input
+                    type={formInputElement.type}
+                    id="book_name"
+                    name={formInputElement.input_name}
+                    value={book[formInputElement.input_name]}
+                    onChange={handleChange}
+                    // ref={inputRefs}
+                    ref={(el) => (inputRefs.current[index] = el)}
+                  />
+                </div>
               </div>
-              <div className="book-form-input">
-                <input
-                  type={formInputElement.type}
-                  id="book_name"
-                  name={formInputElement.input_name}
-                  value={book[formInputElement.input_name]}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-          ))}
-        </>
-        <button type="submit">Submit</button>
+            ))}
+          </>
+          <div>{error && <p className="error-msg">{error}</p>}</div>
+          <div></div>
+          <button type="submit">Submit</button>
         </div>
       </form>
     </>
